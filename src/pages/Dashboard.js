@@ -24,7 +24,7 @@ import { auth } from "../firebase";
 
 
 
-function Dashboard({ setUser }) {
+function Dashboard({ user,setUser }) {
   const navigate = useNavigate();
 
   const [mode, setMode] = useState("light");
@@ -95,8 +95,13 @@ function Dashboard({ setUser }) {
 
   // Logout
   const handleLogout = async () => {
-  await signOut(auth);
-  navigate("/");
+  try {
+    await signOut(auth);
+    setUser(null); // update App.js state
+    navigate("/", { replace: true }); // redirect to login
+  } catch (error) {
+    console.error("Logout failed:", error);
+  }
 };
 
   return (
